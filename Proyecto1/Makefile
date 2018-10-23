@@ -1,7 +1,7 @@
-all: alias
-	
-alias: 
-	cc -o count count.c 
-	timeprog ./count
+all: 
+	clang -o count count.c 
+	clang -o timeprog timeprog.c
+ejecutar: 
+	./timeprog count
 clean: 
-	rm *.o 
+	rm timeprog count
