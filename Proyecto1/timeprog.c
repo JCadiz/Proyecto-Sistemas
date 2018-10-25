@@ -8,24 +8,23 @@
 #include <errno.h>
 
 int main(int argc, char *argv[]){
+    clock_t start, end, total;
+    start = clock();
+
     pid_t pid = fork(); 
-    clock_t start_t, end_t, total_t;
-    
-    if (pid<0){
+    if (pid<0){ //error
         printf("errno = %d\n", errno);
         perror("main");
     }
-    else if (pid == 0){ 
-        start_t = clock();
+    else if (pid == 0){ //hijo
         execv(argv[1], &argv[1]);
-        end_t = clock();
-        total_t = (double)(start_t-end_t) / CLOCKS_PER_SEC;
-        printf("El programa se ejecuto en %lu segundos\n", total_t);
-        exit(0);
+        exit(1);
 	}
-    else {
+    else { //padre
         pid = wait(NULL);
+        end = clock();
+        total = (double)(start-end) / CLOCKS_PER_SEC;
     }
-
+    printf("El programa se ejecuto en %lu segundos\n", total);
     return 0;
 }
