@@ -8,7 +8,7 @@ int main(int argc, char *argv[]){
     int BUFFSIZE = atoi(argv[1]), fd1, fd2, count;
     char buffer[BUFFSIZE];
     
-    if ((BUFFSIZE>=1) || (BUFFSIZE<=16384)){
+    if ((BUFFSIZE>1) && (BUFFSIZE<16384)){
         if ((fd1=open(argv[2], O_RDONLY))<0){
             fprintf(stderr, "el archivo %s no se puede abrir\n", argv[2]);
 		    exit(1);
@@ -23,6 +23,6 @@ int main(int argc, char *argv[]){
         close(fd1);
         close(fd2);
     }
-    else printf("Usted introdujo un tamaño de buffer incorrecto");
+    else printf("Usted introdujo un tamano de buffer incorrecto\n");
     return 0;
 }
