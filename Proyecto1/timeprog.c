@@ -8,8 +8,8 @@
 #include <errno.h>
 
 int main(int argc, char *argv[]){
-    clock_t start, end, total;
-    start = clock();
+    time_t start, end, total;
+    start = time(NULL);
 
     pid_t pid = fork(); 
     if (pid<0){ //error
@@ -22,9 +22,9 @@ int main(int argc, char *argv[]){
 	}
     else { //padre
         pid = wait(NULL);
-        end = clock();
-        total = (double)(start-end) / CLOCKS_PER_SEC;
     }
-    printf("El programa se ejecuto en %lu segundos\n", total);
+    end = time(NULL);
+    total = (double)(end-start);
+    printf("El programa se ejecuto en %lld segundos\n", total);
     return 0;
 }
