@@ -1,8 +1,13 @@
-all:  
-	clang -o numero numero.c
+all:  ucp timeprog numero 
+
+ucp:
+	clang -o ucp ucp.c
+
 timeprog: 
-	./timeprog count
+	clang -o timeprog timeprog.c
+
 numero:
-	./numero
-clean: 
-	rm timeprog count
+	clang -o numero numero.c
+
+clean:
+	rm ucp timeprog numero
