@@ -18,7 +18,6 @@ int main(int argc, char *argv[]){
     }
     else if (pid == 0){ //hijo
         execv(argv[1], &argv[1]);
-        exit(1);
 	}
     else { //padre
         pid = wait(NULL);
