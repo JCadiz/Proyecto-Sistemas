@@ -1,7 +1,8 @@
-all: 
-	clang -o count count.c 
-	clang -o timeprog timeprog.c
-ejecutar: 
+all:  
+	clang -o numero numero.c
+timeprog: 
 	./timeprog count
+numero:
+	./numero
 clean: 
 	rm timeprog count
