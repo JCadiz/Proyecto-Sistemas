@@ -12,23 +12,21 @@
 #include <errno.h>
 
 
-int count=0;
-void wakeup(int s){
-    static int rings = 0;
-    if (++rings > 10) exit(0);
-    printf( "C1: Recibida la señal, enviando mensaje a c2...\n" );
-    count++;
+int ring=0;
+void wakeUp(int s){
+    ring++;
     alarm(2);
 }
 
 int main(int argc, char *argv[]){
     char buffer[125];
-    struct sigaction sigact;
     pid_t c1, c2;
+    int count;
+    struct sigaction sigact;
     sigset_t sigset;
 
     sigemptyset(&sigset);
-    sigact.sa_handler = wakeup;
+    sigact.sa_handler = wakeUp;
     sigact.sa_mask = sigset;
     sigact.sa_flags = 0;
     sigaction(SIGALRM, &sigact, NULL);
@@ -40,40 +38,46 @@ int main(int argc, char *argv[]){
 
     if (c1 == 0) {
         /* Estamos dentro del primer hijo */
-        
+        int rong=0;
         close(fileDes[0]);
-        if ( write( fileDes[ 1 ], "C2: Recibido el mensaje de c1...", 30 ) < 0 ){
-			fprintf( stderr, "No se puede escribir el pipe\n" );
-		}
-        close(fileDes[1]);
         alarm(2);
-        while(1){
+        while (1){
+            if (ring>=10) break;
+            if (rong<ring){
+                rong++;
+                if (write(fileDes[1], "C2: Recibido el mensaje de c1", 30) < 0){
+			        fprintf(stderr, "No se puede escribir el pipe\n");
+		        }
+            }
         }
+        close(fileDes[1]);
     } 
     else {
         c2=fork();
 
         if (c2 == 0) {
             /* Estamos dentro del segundo hijo */
-            close(0);
-            dup( fileDes[ 0 ] );
-            close( fileDes[ 1 ] );
-
-            if ( ( count = read( fileDes[ 0 ], buffer, 100 ) < 0 ) ){
-                fprintf( stderr, "No se puede leer del pipe\n" );
-                exit( 1 );
-		    }
-            for (int i = 0; i < count; i++){
-                printf("buff[] = %s\n", buffer);
+            close(fileDes[1]);
+            while(1){
+                if (ring>=10) break;
+                else {
+                    ring++;
+                    if ((count = read(fileDes[0], buffer, 100) < 0)){
+                        fprintf(stderr, "No se puede leer del pipe\n");
+                        exit(1);
+                    }
+                    printf("%s\n", buffer);
+                }
             }
-            exit( 0 );
+            close(fileDes[0]);
+            exit(0);
         } 
         else {
             /* Estamos dentro del padre */
-            c1 = wait(NULL);
-            c2 = wait(NULL);
             close(fileDes[0]);
             close(fileDes[1]);
+            c1 = wait(NULL);
+            c2 = wait(NULL);
             printf("PADRE: Fin del padre\n");
         }
     }
