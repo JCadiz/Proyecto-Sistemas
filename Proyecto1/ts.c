@@ -6,25 +6,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <errno.h>
-
-void procesos(){
-
- while(1){
-		
- }  
- 
-}
-
-void procesos2(){
- pid_t id;
- id = fork();
-
- 
- while(1){
-	printf("proceso numero usuario 2:");	
- }  
- 
-}
+#include <signal.h>
 
 int main(int argc, char *argv[]){
     int uid1 = atoi(argv[1]); // id del primer usuario
@@ -33,46 +15,69 @@ int main(int argc, char *argv[]){
     int count2 = atoi(argv[4]); // numero de procesos que le segundo usuario debe bifurcar
     pid_t id;
     int i =0 , j=0; //auxiliar para cantidad de iteraciones a realizar por usuario
-    int k,l; // indices para darle formato a la impresion de los resultados 
-	
-     clock_t inicio1, inicio2,final1,final2, total_t;
+    int k,l, pid; // indices para darle formato a la impresion de los resultados
+    time_t start, end, total;
+    double tiempo1[count1]; // declaracion de unos arreglos para guardar el tiempo inicial de ejecucion de cada proceso
+    double tiempo2[count2];
+    double fin1[count1]; // declaracion de unos arreglos para guardar el tiempo final de ejecucion de cada proceso
+    double fin2[count2];
+     
 
-    while ( i < count1){
-	id = fork();
+     while ( i < count1){
+	start = time(NULL);
+	tiempo1[i] = (double)start;	
+	id = fork();	
+	if (id < 0){ 
+		printf("errno = %d\n", errno);
+		perror("main");
+	}else if ( id == 0 ){
+		printf("hola procesos usuario 1\n");
+		i++;
+	}else {
+		pid = getpid ();
+		kill(pid, SIGKILL );
+	}
+    } 
+    end = time(NULL);
+    // tomar el timepo final de cada proceso
+     for(i =0; i< count1; i++){
+	fin1[i] = (double)end;
+	}
 
-		if (id < 0){ 
-			printf("errno = %d\n", errno);
-			perror("main");
-	    	}else if ( id == 0 ){
-			
-			
-			exit( 0 ); 
-		}else {
-		   procesos();
-		   
-		   
-		}
+    //calcular la suma de los tiempos del primer usuario
+    for(i =0; i< count1; i++){
+	 total = (double)(fin1[i]-tiempo1[i]);
+	}
+    printf("El programa del usuario 1 en %lld segundos\n", total);
 
-	i++;
-    }
-    
     while ( j < count2){
-	id = fork();
+	start = time(NULL);
+	tiempo2[i] = (double)start;	
+	id = fork();	
+	if (id < 0){ 
+		printf("errno = %d\n", errno);
+		perror("main");
+	}else if ( id == 0 ){
+		printf("hola procesos usuario 2\n");
+		j++;
+	}else {
+		pid = getpid ();
+		kill(pid, SIGKILL );
+	}
+    } 
+    end = time(NULL);
+    // tomar el timepo final de cada proceso
+     for(i =0; i< count1; i++){
+	fin2[i] = (double)end;
+	}
 
-		if (id < 0){ 
-			printf("errno = %d\n", errno);
-			perror("main");
-	    	}else if ( id == 0 ){
-			
-			
-			exit( 0 ); 
-		}else {
-		   procesos2();
-		   
-		   
-		}
-	j++;
-    }
+    //calcular la suma de los tiempos del primer usuario
+    for(i =0; i< count1; i++){
+	 total = (double)(fin2[i]-tiempo2[i]);
+	}
+    printf("El programa del usuario 1 en %lld segundos\n", total);
+    
+   // while(1){} */
 
 	 /*for(k =0; k<3; k++){
 		for(l =0; l<5; l++){
