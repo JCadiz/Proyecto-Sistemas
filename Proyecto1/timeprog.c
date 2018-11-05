@@ -24,6 +24,6 @@ int main(int argc, char *argv[]){
     }
     end = time(NULL);
     total = (double)(end-start);
-    printf("El programa se ejecuto en %lld segundos\n", total);
+    printf("El programa se ejecuto en %ld segundos\n", total);
     return 0;
 }
