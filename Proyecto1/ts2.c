@@ -30,7 +30,7 @@ int main(int argc, char *argv[]){
         pid2 = fork();
     }
 
-    if (pid1==0){
+    if (pid1>0){
         pid1 = getpid ();
 		kill(pid1, SIGKILL);
     }
@@ -51,10 +51,9 @@ int main(int argc, char *argv[]){
 
     }
 
-    if (pid2==0){
-        pid2 = wait(NULL);
-        //pid2= getpid ();
-		//kill(pid2, SIGKILL);
+    if (pid2>0){
+        pid2= getpid ();
+		kill(pid2, SIGKILL);
     }
     else{
         startp = time(NULL);
