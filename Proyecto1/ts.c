@@ -8,6 +8,7 @@
 #include <errno.h>
 #include <signal.h>
 #include <stdbool.h>
+#include <sys/times.h>
 
 int main(int argc, char *argv[]){
     int uid1 = atoi(argv[1]); // id del primer usuario
@@ -23,6 +24,10 @@ int main(int argc, char *argv[]){
     double tiempo2[count2];
     double suma1,suma2;
     bool entrada= true;
+	struct tms start_tms;
+    struct tms end_tms;
+	int tics_per_second;
+	tics_per_second = sysconf(_SC_CLK_TCK);
 	
     verificar = time(NULL);
 	
@@ -30,9 +35,9 @@ int main(int argc, char *argv[]){
 
 	 while ( i < count1){
 		start = time(NULL);
-		tiempo1[i] = (double)start;	
-		id = fork();	
-		if (id < 0){ 
+		tiempo1[i] = (double)start;
+		id = fork();
+		if (id < 0){
 			printf("errno = %d\n", errno);
 			perror("main");
 		}else if ( id == 0 ){
@@ -42,8 +47,8 @@ int main(int argc, char *argv[]){
 			pid = getpid ();
 			kill(pid, SIGKILL );
 		}
-    	 } 
-   
+    	 }
+
 	 while ( j < count2){
 		start = time(NULL);
 		tiempo2[j] = (double)start;	
@@ -66,8 +71,9 @@ int main(int argc, char *argv[]){
 	}
 	
     }
-	printf("UID  COUNT  USERTIME  SYSTIME  USER+SYSTEM\n");
     end = time(NULL);
+
+	printf("UID  COUNT  SYSTIME  USERTIME  USER+SYSTEM\n");
     //calcular el tiempo de ejecucion de cada usuario 
     for(i =0; i< count1; i++){
 	total1 = total1 + (int)(end-tiempo1[i]);
@@ -82,11 +88,11 @@ int main(int argc, char *argv[]){
 			if(k == 0){
 			}if(k==1){
 				if(l == 0){
-					printf("%d  ",uid1);
+					printf("   %d  ",uid1);
 				}else if( l == 1){
 					printf("%i  ",count1);	
 				}else if( l == 2){
-					printf("%li  ", total1);	
+					printf("%lli  ", total1);	
 				}else if( l == 3){
 					printf("%i  ",ejecucion);	
 				}else{
@@ -94,11 +100,11 @@ int main(int argc, char *argv[]){
 				}
 			}else {
 				if(l == 0){
-					printf("%d  ",uid2);
+					printf("   %d  ",uid2);
 				}else if( l == 1){
 					printf("%d   ",count2);	
 				}else if( l == 2){
-					printf("%li   ", total2);	
+					printf("%lli   ", total2);	
 				}else if( l == 3){
 					printf("%i   ",ejecucion);	
 				}else{
@@ -107,10 +113,5 @@ int main(int argc, char *argv[]){
 			}
 		}
 	} 
-
-
-
-    	
-	
     return 0;
 }
