@@ -13,7 +13,7 @@
 
 
 int ring=0;
-void wakeUp(int s){
+void wakeUp(int s){ // señal que recibira c1
     ring++;
     alarm(2);
 }
@@ -25,7 +25,8 @@ int main(int argc, char *argv[]){
     struct sigaction sigact;
     sigset_t sigset;
 
-    sigemptyset(&sigset);
+    //Se configura la señal
+    sigemptyset(&sigset); 
     sigact.sa_handler = wakeUp;
     sigact.sa_mask = sigset;
     sigact.sa_flags = 0;
@@ -41,11 +42,11 @@ int main(int argc, char *argv[]){
         int rong=0;
         close(fileDes[0]);
         alarm(2);
-        while (1){
-            if (ring>=10) break;
-            if (rong<ring){
-                rong++;
-                if (write(fileDes[1], "C2: Recibido el mensaje de c1", 30) < 0){
+        while (1){ 
+            if (ring>=10) break; //cuando ring llegue a 10 significa que ya recibio las 10 señales
+            if (rong<ring){//necesito este if para controlar el envio de mensajes
+                rong++; //necesito enviar 10 mensajes, por eso uso la variable rong, ring aumenta cada 2 segundos
+                if (write(fileDes[1], "C2: Recibido el mensaje de c1", 30) < 0){ //Por aqui mando el mensaje a c2
 			        fprintf(stderr, "No se puede escribir el pipe\n");
 		        }
             }
@@ -58,11 +59,11 @@ int main(int argc, char *argv[]){
         if (c2 == 0) {
             /* Estamos dentro del segundo hijo */
             close(fileDes[1]);
-            while(1){
-                if (ring>=10) break;
+            while(1){//dentro de este while c2 solo leera del pipe cada vez que c1 escriba de nuevo
+                if (ring>=10) break; //aqui me salgo del while cuando imprima 10 mensajes
                 else {
                     ring++;
-                    if ((count = read(fileDes[0], buffer, 100) < 0)){
+                    if ((count = read(fileDes[0], buffer, 100) < 0)){ //leo del pipe
                         fprintf(stderr, "No se puede leer del pipe\n");
                         exit(1);
                     }

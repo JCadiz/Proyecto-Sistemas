@@ -29,8 +29,8 @@ int main(int argc, char *argv[]){
 	
     while(entrada){
 
-	 while ( i < count1){
-		start1 = time(NULL);
+	 while ( i < count1){ //creo los procesos del usuario1
+		start1 = time(NULL);//Tomo el tiempo actual
 		id = fork();
 		if (id < 0){
 			printf("errno = %d\n", errno);
@@ -38,14 +38,14 @@ int main(int argc, char *argv[]){
 		}else if ( id == 0 ){
 			//printf("hola procesos usuario 1\n");
 			i++;
-		}else {
+		}else {//elimino los procesos innecesarios
 			pid = getpid ();
 			kill(pid, SIGKILL );
 		}
     	 }
 
-	 while ( j < count2){
-		start2 = time(NULL);	
+	 while ( j < count2){//creo los procesos del usuario2
+		start2 = time(NULL);//Tomo el tiempo actual	
 		id = fork();	
 		if (id < 0){ 
 			printf("errno = %d\n", errno);
@@ -53,7 +53,7 @@ int main(int argc, char *argv[]){
 		}else if ( id == 0 ){
 			 //printf("hola procesos usuario 2\n");
 			j++;
-		}else {
+		}else {//elimino los procesos innecesarios
 			pid = getpid ();
 			kill(pid, SIGKILL );
 		}
@@ -65,16 +65,16 @@ int main(int argc, char *argv[]){
 	}
 	
     }
-    end = time(NULL);
+    end = time(NULL);//Tomo el nuevo tiempo actual
 
 	printf("UID COUNT USERTIME SYSTIME USER+SYSTEM\n");
     //calcular el tiempo de ejecucion de cada usuario
-	total1 = (double)(end-start1);
-	clock_t stime1 = (double)(end-start1)/tics_per_second;
-	suma1= total1+stime1;
-	total2 = (double)(end-start2);
-	clock_t stime2 = (double)(end-start2)/tics_per_second;
-	suma2= total2+stime2;
+	total1 = (double)(end-start1);//Me da la duracion del usuario1
+	clock_t stime1 = (double)(end-start1)/tics_per_second;//Duracion del sistema1
+	suma1= total1+stime1;//Sumo los dos tiempos
+	total2 = (double)(end-start2);//Me da la duracion del usuario2
+	clock_t stime2 = (double)(end-start2)/tics_per_second;//Duracion del sistema2
+	suma2= total2+stime2;//Sumo los dos tiempos
 
 	
 	printf("%d  %d  %lld  %lu  %f\n", uid1, count1, total1, stime1, suma1);
