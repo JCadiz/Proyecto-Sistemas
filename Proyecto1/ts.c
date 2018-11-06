@@ -18,15 +18,11 @@ int main(int argc, char *argv[]){
     int ejecucion = atoi(argv[5]);
     pid_t id;
     int i =0 , j=0; //auxiliar para cantidad de iteraciones a realizar por usuario
-    int k,l, pid; // indices para darle formato a la impresion de los resultados
-    time_t start, end, total1, total2, verificar,  verificarfinal;
-    double tiempo1[count1]; // declaracion de unos arreglos para guardar el tiempo inicial de ejecucion de cada proceso
-    double tiempo2[count2];
+    int pid;
+    time_t start1, start2, end, total1, total2, verificar,  verificarfinal;
     double suma1,suma2;
     bool entrada= true;
-	struct tms start_tms;
-    struct tms end_tms;
-	int tics_per_second;
+	double tics_per_second;
 	tics_per_second = sysconf(_SC_CLK_TCK);
 	
     verificar = time(NULL);
@@ -34,8 +30,7 @@ int main(int argc, char *argv[]){
     while(entrada){
 
 	 while ( i < count1){
-		start = time(NULL);
-		tiempo1[i] = (double)start;
+		start1 = time(NULL);
 		id = fork();
 		if (id < 0){
 			printf("errno = %d\n", errno);
@@ -50,8 +45,7 @@ int main(int argc, char *argv[]){
     	 }
 
 	 while ( j < count2){
-		start = time(NULL);
-		tiempo2[j] = (double)start;	
+		start2 = time(NULL);	
 		id = fork();	
 		if (id < 0){ 
 			printf("errno = %d\n", errno);
@@ -73,45 +67,18 @@ int main(int argc, char *argv[]){
     }
     end = time(NULL);
 
-	printf("UID  COUNT  SYSTIME  USERTIME  USER+SYSTEM\n");
-    //calcular el tiempo de ejecucion de cada usuario 
-    for(i =0; i< count1; i++){
-	total1 = total1 + (int)(end-tiempo1[i]);
-    }
-    for(i =0; i< count2; i++){
-	total2= total2 + (int)(end-tiempo1[i]);
-    }
-	
+	printf("UID COUNT USERTIME SYSTIME USER+SYSTEM\n");
+    //calcular el tiempo de ejecucion de cada usuario
+	total1 = (double)(end-start1);
+	clock_t stime1 = (double)(end-start1)/tics_per_second;
+	suma1= total1+stime1;
+	total2 = (double)(end-start2);
+	clock_t stime2 = (double)(end-start2)/tics_per_second;
+	suma2= total2+stime2;
 
-	 for(k =0; k<3; k++){
-		for(l =0; l<5; l++){
-			if(k == 0){
-			}if(k==1){
-				if(l == 0){
-					printf("   %d  ",uid1);
-				}else if( l == 1){
-					printf("%i  ",count1);	
-				}else if( l == 2){
-					printf("%lli  ", total1);	
-				}else if( l == 3){
-					printf("%i  ",ejecucion);	
-				}else{
-					printf("%d  \n",(int)(total1 + (int)(ejecucion)));	
-				}
-			}else {
-				if(l == 0){
-					printf("   %d  ",uid2);
-				}else if( l == 1){
-					printf("%d   ",count2);	
-				}else if( l == 2){
-					printf("%lli   ", total2);	
-				}else if( l == 3){
-					printf("%i   ",ejecucion);	
-				}else{
-					printf("%i   \n",(int)(total2 + (int)(ejecucion)));	
-				}
-			}
-		}
-	} 
+	
+	printf("%d  %d  %lld  %lu  %f\n", uid1, count1, total1, stime1, suma1);
+	printf("%d  %d  %lld  %lu  %f\n", uid2, count2, total2, stime2, suma2);
+
     return 0;
 }

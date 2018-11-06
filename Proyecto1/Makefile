@@ -1,4 +1,4 @@
-all:  ucp timeprog numero comunication
+all:  ucp timeprog numero comunication ts
 
 ucp:
 	clang -o ucp ucp.c
@@ -12,5 +12,8 @@ numero:
 comunication:
 	clang -o comunication comunication.c
 
+ts:
+	clang -o ts ts.c
+
 clean:
-	rm ucp timeprog numero comunication
+	rm ucp timeprog numero comunication ts
