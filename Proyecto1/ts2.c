@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <sys/times.h>
+#include <signal.h>
 #include <errno.h>
 
 int main(int argc, char *argv[]){
@@ -14,6 +15,7 @@ int main(int argc, char *argv[]){
     int uid2 = atoi(argv[3]); // id del segundo usuario
     int count2 = atoi(argv[4]); // numero de procesos que le segundo usuario debe bifurcar
     int timing = atoi(argv[5]); // segundos de duracion del programa
+    int x;
     (double) timing;
     pid_t pid1, pid2;
 	time_t start, end, total, startp, endp, totalp;
@@ -24,15 +26,23 @@ int main(int argc, char *argv[]){
 
 	for (int i; i<count1; i++){
 		pid1 = fork();
+            if (pid1>0){
+            x = getpid ();
+            kill(x, SIGKILL);
+        }
 	}
 
     for (int j; j<count2; j++){
         pid2 = fork();
+            if (pid2>0){
+            x= getpid ();
+            kill(x, SIGKILL);
+        }
     }
 
+
     if (pid1>0){
-        pid1 = getpid ();
-		kill(pid1, SIGKILL);
+        pid1=wait(NULL);
     }
     else{
         startp = time(NULL);
@@ -48,12 +58,11 @@ int main(int argc, char *argv[]){
         clock_t stime = end_tms.tms_cstime - start_tms.tms_cstime;
         totalp = (double)(endp-startp);
         printf("%d  %d  %lld  %lu  USER+SYSTEM\n", uid1, count1, totalp, stime);
-
+        exit(0);
     }
 
     if (pid2>0){
-        pid2= getpid ();
-		kill(pid2, SIGKILL);
+        pid2=wait(NULL);
     }
     else{
         startp = time(NULL);
@@ -65,6 +74,7 @@ int main(int argc, char *argv[]){
         }
         endp = time(NULL);
         totalp = (double)(endp-startp);
+        exit(0);
     }
 
     return 0;

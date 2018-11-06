@@ -46,7 +46,7 @@ int main(int argc, char *argv[]){
    
 	 while ( j < count2){
 		start = time(NULL);
-		tiempo2[i] = (double)start;	
+		tiempo2[j] = (double)start;	
 		id = fork();	
 		if (id < 0){ 
 			printf("errno = %d\n", errno);
@@ -60,13 +60,13 @@ int main(int argc, char *argv[]){
 		}
 	  } 
 	verificarfinal= time(NULL);
-	printf("verificar hasta este momento %i \n", (int)(verificarfinal - verificar));
+	/*printf("verificar hasta este momento %i \n", (int)(verificarfinal - verificar));*/
 	if(((int)(verificarfinal - verificar)) == ejecucion){
 		entrada = false;	
 	}
 	
     }
-
+	printf("UID  COUNT  USERTIME  SYSTIME  USER+SYSTEM\n");
     end = time(NULL);
     //calcular el tiempo de ejecucion de cada usuario 
     for(i =0; i< count1; i++){
@@ -80,40 +80,29 @@ int main(int argc, char *argv[]){
 	 for(k =0; k<3; k++){
 		for(l =0; l<5; l++){
 			if(k == 0){
+			}if(k==1){
 				if(l == 0){
-					printf("|   UID  ");
+					printf("%d  ",uid1);
 				}else if( l == 1){
-					printf("| COUNT ");	
+					printf("%i  ",count1);	
 				}else if( l == 2){
-					printf("|                  USERTIME                 ");	
+					printf("%li  ", total1);	
 				}else if( l == 3){
-					printf("|      SYSTEMTIME        ");	
+					printf("%i  ",ejecucion);	
 				}else{
-					printf("|         USER+SYSTEM     | \n");	
-				}
-			}else if(k==1){
-				if(l == 0){
-					printf("  %d ",uid1);
-				}else if( l == 1){
-					printf("   %i ",count1);	
-				}else if( l == 2){
-					printf("                         %li", total1);	
-				}else if( l == 3){
-					printf("       %i",ejecucion);	
-				}else{
-					printf("                %d \n",(int)(total1 + (int)(ejecucion)));	
+					printf("%d  \n",(int)(total1 + (int)(ejecucion)));	
 				}
 			}else {
 				if(l == 0){
-					printf("   %d ",uid2);
+					printf("%d  ",uid2);
 				}else if( l == 1){
-					printf("   %d",count2);	
+					printf("%d   ",count2);	
 				}else if( l == 2){
-					printf("                         %li", total2);	
+					printf("%li   ", total2);	
 				}else if( l == 3){
-					printf("   %i",ejecucion);	
+					printf("%i   ",ejecucion);	
 				}else{
-					printf("                   %i \n",(int)(total2 + (int)(ejecucion)));	
+					printf("%i   \n",(int)(total2 + (int)(ejecucion)));	
 				}
 			}
 		}
