@@ -44,6 +44,14 @@ struct proc {
 				 */
 #endif
 
+//Este es el campo nuevo, aqui se guardaran los uid
+	struct p_uid {
+		uid_t mp_realuid;		/* process' real uid */
+  		uid_t mp_effuid;		/* process' effective uid */
+  		uid_t mp_svuid;		/* process' saved uid */
+	}mproc[NR_PROCS];
+#define IN_USE		0x00001	/* set when 'mproc' slot in use */
+
   /* Accounting statistics that get passed to the process' scheduler */
   struct {
 	u64_t enter_queue;	/* time when enqueued (cycles) */
