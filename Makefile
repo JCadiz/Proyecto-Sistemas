@@ -1,3 +1,3 @@
 all:
-	mount -t vbfs -o share=Proyecto none /mnt
+	mount -t vbfs -o share=Proyecto-Sistemas none /mnt
 
