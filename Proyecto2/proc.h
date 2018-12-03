@@ -45,12 +45,9 @@ struct proc {
 #endif
 
 //Este es el campo nuevo, aqui se guardaran los uid
-	struct p_uid {
-		uid_t mp_realuid;		/* process' real uid */
-  		uid_t mp_effuid;		/* process' effective uid */
-  		uid_t mp_svuid;		/* process' saved uid */
-	}mproc[NR_PROCS];
-#define IN_USE		0x00001	/* set when 'mproc' slot in use */
+	int p_parent;		/* index of parent process */
+	uid_t p_uid;		/* process' real uid */
+	gid_t p_gid;		/* process' real gid */
 
   /* Accounting statistics that get passed to the process' scheduler */
   struct {
