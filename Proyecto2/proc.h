@@ -45,9 +45,7 @@ struct proc {
 #endif
 
 //Este es el campo nuevo, aqui se guardaran los uid
-	int p_parent;		/* index of parent process */
 	uid_t p_uid;		/* process' real uid */
-	gid_t p_gid;		/* process' real gid */
 
   /* Accounting statistics that get passed to the process' scheduler */
   struct {

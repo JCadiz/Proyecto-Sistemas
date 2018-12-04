@@ -16,15 +16,15 @@ struct hook_entry {
 	void (*function)(void);
 	char *name;
 } hooks[] = {
-  { F1,	privileges_dmp, "Process privileges"},
+  { F1, proctab_dmp, "Kernel process table"},
 	{ F3,	image_dmp, "System image" },
-	{ F4,	proctab_dmp, "Kernel process table" },
+	{ F4, mproc_dmp, "Process manager process table" },
 	{ F5,	monparams_dmp, "Boot monitor parameters" },
 	{ F6,	irqtab_dmp, "IRQ hooks and policies" },
 	{ F7,	kmessages_dmp, "Kernel messages" },
 	{ F8,	vm_dmp, "VM status and process maps" },
 	{ F10,	kenv_dmp, "Kernel parameters" },
-	{ SF1,	mproc_dmp, "Process manager process table" },
+	{ SF1,  privileges_dmp, "Process privileges" },
 	{ SF2,	sigaction_dmp, "Signals" },
 	{ SF3,	fproc_dmp, "Filesystem process table" },
 	{ SF4,	dtab_dmp, "Device/Driver mapping" },
