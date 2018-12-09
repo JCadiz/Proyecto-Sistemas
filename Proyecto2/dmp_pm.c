@@ -9,7 +9,7 @@
 
 #include "inc.h"
 #include "../pm/mproc.h"
-#include "../kernel/proc.h"
+//#include "../../kernel/proc.h"
 #include <minix/timers.h>
 #include <minix/config.h>
 #include <minix/type.h>
@@ -55,13 +55,12 @@ mproc_dmp(void)
   printf("INDEX   UID   GID\n");
   for (i=prev_i; i<NR_PROCS; i++) {
   	mp = &mproc[i];
-	p = &proc[i];
   	if (mp->mp_pid == 0 && i != PM_PROC_NR) continue;
   	if (++n > 22) break;
   	printf("%4d",
   		mp->mp_parent);
   	printf("%2d %2d",
-  		p->p_uid, mp->mp_realgid);
+  		mp->mp_realuid, mp->mp_realgid);
   	printf("\n");
   }
   if (i >= NR_PROCS) i = 0;
