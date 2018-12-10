@@ -7,7 +7,6 @@
 #include <limits.h>
 #include <minix/timers.h>
 #include <signal.h>
-
 #include <sys/cdefs.h>
 
 /* Needs to be included here, for 'ps' etc */
@@ -20,6 +19,7 @@
  */
 typedef struct sigaction ixfer_sigaction;
 EXTERN ixfer_sigaction mpsigact[NR_PROCS][_NSIG];
+struct proc *p;
 
 EXTERN struct mproc {
   char mp_exitstatus;		/* storage for status when process exits */

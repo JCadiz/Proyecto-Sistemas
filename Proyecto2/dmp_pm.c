@@ -9,7 +9,6 @@
 
 #include "inc.h"
 #include "../pm/mproc.h"
-//#include "../../kernel/proc.h"
 #include <minix/timers.h>
 #include <minix/config.h>
 #include <minix/type.h>
@@ -42,11 +41,10 @@ void
 mproc_dmp(void)
 {
   struct mproc *mp;
-  struct porc *p;
   int i, n=0;
   static int prev_i = 0;
 
-  if (getsysinfo(PM_PROC_NR, SI_PROC_TAB, mproc, sizeof(mproc)) != OK) {
+  if (getsysinfo(PM_PROC_NR, SI_PROC_TAB, proc, mproc, sizeof(mproc)) != OK) {
 	printf("Error obtaining table from PM. Perhaps recompile IS?\n");
 	return;
   }
@@ -57,10 +55,8 @@ mproc_dmp(void)
   	mp = &mproc[i];
   	if (mp->mp_pid == 0 && i != PM_PROC_NR) continue;
   	if (++n > 22) break;
-  	printf("%4d",
-  		mp->mp_parent);
-  	printf("%2d %2d",
-  		mp->mp_realuid, mp->mp_realgid);
+  	printf("%4d ", mp->mp_parent); //INDEX
+  	printf("  %2d   %2d", mp->pm_realuid, mp->mp_realgid);// UID & GID
   	printf("\n");
   }
   if (i >= NR_PROCS) i = 0;
