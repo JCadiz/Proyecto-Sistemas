@@ -8,6 +8,7 @@
  */
 
 #include "inc.h"
+#include "../../kernel/proc.h"
 #include "../pm/mproc.h"
 #include <minix/timers.h>
 #include <minix/config.h>
@@ -41,22 +42,25 @@ void
 mproc_dmp(void)
 {
   struct mproc *mp;
+  struct proc *rp;
   int i, n=0;
   static int prev_i = 0;
 
-  if (getsysinfo(PM_PROC_NR, SI_PROC_TAB, proc, mproc, sizeof(mproc)) != OK) {
+  if (getsysinfo(PM_PROC_NR, SI_PROC_TAB, mproc, sizeof(mproc)) != OK) {
 	printf("Error obtaining table from PM. Perhaps recompile IS?\n");
 	return;
   }
 
   printf("Process manager (PM) process table dump\n");
-  printf("INDEX   UID   GID\n");
+  printf("-Proces- nr-index--uid--gid\n");
   for (i=prev_i; i<NR_PROCS; i++) {
   	mp = &mproc[i];
+	rp = &proc[i];
+	rp->p_uid = mp->mp_realuid;
   	if (mp->mp_pid == 0 && i != PM_PROC_NR) continue;
   	if (++n > 22) break;
-  	printf("%4d ", mp->mp_parent); //INDEX
-  	printf("  %2d   %2d", mp->pm_realuid, mp->mp_realgid);// UID & GID
+  	printf("%8.8s  %4d  %2d ", mp->mp_name, i, mp->mp_parent); //INDEX
+  	printf(" %2d   %2d",rp->p_uid, mp->mp_realgid);// UID & GID
   	printf("\n");
   }
   if (i >= NR_PROCS) i = 0;
@@ -101,5 +105,3 @@ sigaction_dmp(void)
   else printf("--more--\r");
   prev_i = i;
 }
-
-

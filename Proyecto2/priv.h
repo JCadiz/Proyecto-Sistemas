@@ -17,6 +17,7 @@
 #include "const.h"
 #include "type.h"
 #include "ipc_filter.h"
+#include "../include/minix/timers.h"
 
 struct priv {
   proc_nr_t s_proc_nr;		/* number of associated process */

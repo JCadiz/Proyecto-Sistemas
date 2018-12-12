@@ -7,11 +7,23 @@
  *   do_nice		  Request to change the nice level on a proc
  *   init_scheduling      Called from main.c to set up/prepare scheduling
  */
+
+
+#include <minix/const.h>
+#include <sys/cdefs.h>
+
 #include "sched.h"
 #include "schedproc.h"
 #include <assert.h>
 #include <minix/com.h>
 #include <machine/archtypes.h>
+
+//Project includes
+#include "../../kernel/proc.h"
+#include <stdlib.h>
+#include <time.h>
+#include "../../kernel/proc.h"
+#include "../../kernel/priv.h"
 
 static unsigned balance_timeout;
 
@@ -78,6 +90,43 @@ static void pick_cpu(struct schedproc * proc)
 #else
 	proc->cpu = 0;
 #endif
+}
+
+/*===========================================================================*
+ *				get random uid				     *
+ *===========================================================================*/
+
+int get_random_uid(uid_t uid){
+	int i;
+	struct proc *rp;
+
+	srandom(time(NULL));
+
+	while (i <= NR_PROCS){
+		i = random() % NR_PROCS;
+	}
+
+	rp = &proc[i];
+	uid = rp->p_uid;
+
+	return i;
+}
+
+/*===========================================================================*
+ *				get_priority				     *
+ *===========================================================================*/
+
+int get_priority(struct schedproc * rmp){
+	struct proc *rp;
+	int i, prioridad;
+	uid_t uid;
+
+	i = get_random_uid(uid);
+	rp = &proc[i];
+	prioridad = rp->p_priority; 
+	rmp->priority = prioridad;
+	
+	return prioridad;
 }
 
 /*===========================================================================*
@@ -302,7 +351,7 @@ static int schedule_process(struct schedproc * rmp, unsigned flags)
 	pick_cpu(rmp);
 
 	if (flags & SCHEDULE_CHANGE_PRIO)
-		new_prio = rmp->priority;
+		new_prio = get_priority(rmp);
 	else
 		new_prio = -1;
 
@@ -326,7 +375,6 @@ static int schedule_process(struct schedproc * rmp, unsigned flags)
 
 	return err;
 }
-
 
 /*===========================================================================*
  *				init_scheduling				     *

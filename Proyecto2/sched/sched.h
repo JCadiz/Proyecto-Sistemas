@@ -15,4 +15,11 @@
 
 #include "proto.h"
 
+//Project includes
+#include "../../kernel/proc.h"
+#include "../pm/mproc.h"
+#include <stdlib.h>
+#include <time.h>
+#include "../../kernel/priv.h"
+
 extern struct machine machine;		/* machine info */
