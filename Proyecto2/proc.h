@@ -20,7 +20,7 @@
 #include "priv.h"
 
 struct proc {
-  
+  uid_t p_uid;		/* process' uid */
   struct stackframe_s p_reg;	/* process' registers saved in stack frame */
   struct segframe p_seg;	/* segment descriptors */
   proc_nr_t p_nr;		/* number of this process (for fast access) */
@@ -44,8 +44,6 @@ struct proc {
 				processes memory
 				 */
 #endif
-
-  uid_t p_uid;		/* process' uid */
 
   /* Accounting statistics that get passed to the process' scheduler */
   struct {

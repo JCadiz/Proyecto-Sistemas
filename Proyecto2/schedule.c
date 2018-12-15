@@ -22,7 +22,6 @@
 #include "../../kernel/proc.h"
 #include <stdlib.h>
 #include <time.h>
-#include "../../kernel/proc.h"
 #include "../../kernel/priv.h"
 
 static unsigned balance_timeout;
