@@ -366,10 +366,11 @@ void memstats(int *nodes, int *pages, int *largest)
 	}
 }
 
-static int findbit(int low, int startscan, int pages, int memflags, int *len)
-{
+static int findbit(int low, int startscan, int pages, int memflags, int *len){
 	int run_length = 0, i;
 	int freerange_start = startscan;
+	int best = INT_MAX;
+	int bestaddress;
 
 	for(i = startscan; i >= low; i--) {
 		if(!page_isfree(i)) {
@@ -385,14 +386,9 @@ static int findbit(int low, int startscan, int pages, int memflags, int *len)
 			if(moved) { i = chunk * BITCHUNK_BITS + BITCHUNK_BITS; }
 			continue;
 		}
-		if(!run_length) { freerange_start = i; run_length = 1; }
-		else { freerange_start--; run_length++; }
-		assert(run_length <= pages);
-		if(run_length == pages) {
-			/* good block found! */
-			*len = run_length;
-			return freerange_start;
-		}
+		
+
+
 	}
 
 	return NO_MEM;
