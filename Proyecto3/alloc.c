@@ -365,11 +365,15 @@ void memstats(int *nodes, int *pages, int *largest)
 			*largest = size;
 	}
 }
-
+/*	Low: supongo que es la menor cantidad de paginas
+	startscan: es la posicion de la pagina de memoria donde empezare a escanear
+	pages: tamaño del hueco de memoria
+	len: es un puntero que indica el tamaño del bloque de memoria
+*/
 static int findbit(int low, int startscan, int pages, int memflags, int *len){
-	int run_length = 0, i;
+	int run_length = 0, i; //cantidad de paginas consecutivas disponibles
 	int freerange_start = startscan;
-	int best = INT_MAX;
+	int best = INT_MAX; //No hay una pagina con la misma cantidad de bytes que el mayor int, asi que se usa para comparar
 	int bestaddress;
 
 	for(i = startscan; i >= low; i--) {
@@ -387,8 +391,24 @@ static int findbit(int low, int startscan, int pages, int memflags, int *len){
 			continue;
 		}
 		
+		if((page_isfree(i)) && (run_length >= pages) && (run_length < best)) {
+			best = run_length;
+			bestaddress = freerange_start;
+		}
+		
+		if(!run_length) {
+			freerange_start = i;
+			run_length = 1;
+		}
+		else {
+			freerange_start--;
+			run_length++;
+		}
+	}
 
-
+	if(best >= pages && best < INT_MAX) {//Aqui se retorna el len de la pagina y la direccion (si es que se encontro)
+		*len = pages;
+		return bestaddress;
 	}
 
 	return NO_MEM;
